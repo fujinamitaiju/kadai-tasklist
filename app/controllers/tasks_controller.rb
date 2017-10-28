@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show,:edit,:update,:destroy]
   def index
-    @tasks = Task.all
+    @tasks = Task.all.page(params[:page])
   end
 
   def show
@@ -41,19 +41,17 @@ class TasksController < ApplicationController
     @task.destroy
      flash[:success] = 'Task が投稿されました'
      redirect_to tasks_url
-    
   end
-  
-  
+
   private
 
   def set_task
     @task=Task.find(params[:id])
   end
-  
+
   # Strong Parameter
   def task_params
     params.require(:task).permit(:content,:status)
   end
-  
+
 end
