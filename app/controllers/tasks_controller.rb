@@ -1,11 +1,14 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show,:edit,:update,:destroy]
+  before_action :correct_user, only: [:show,:edit,:update, :destroy]
+  before_action :require_user_logged_in, only: [:new, :create]
+
   def index
     if logged_in?
-    @user = current_user
-      @task = current_user.tasks.build  # form_for 用
+      @user = current_user
+      # @task = current_user.tasks.build  # form_for 用
       @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
-  end
+    end
   end
 
   def show
@@ -31,7 +34,6 @@ class TasksController < ApplicationController
   end
 
   def update
-    
     if @task.update(task_params)
       flash[:success] = 'Task が投稿されました'
       redirect_to root_url
@@ -47,8 +49,10 @@ class TasksController < ApplicationController
      redirect_to root_url
   end
 
-def task_params
-    params.require(:task).permit(:content)
+  private
+
+  def set_task
+    @task=Task.find(params[:id])
   end
 
   def correct_user
@@ -58,16 +62,8 @@ def task_params
     end
   end
 
-
-  private
-
-  def set_task
-    @task=Task.find(params[:id])
-  end
-
   # Strong Parameter
   def task_params
     params.require(:task).permit(:content,:status)
   end
-
 end

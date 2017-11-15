@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       flash[:success] = 'ユーザーを作成しました。'
-      redirect_to root_url
+      redirect_to login_url
     else
       #TODO:駄目だった時の処理
       flash.now[:danger] = 'ユーザーの登録に失敗しました。'
@@ -21,5 +21,4 @@ class UsersController < ApplicationController
     def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
-    
 end
